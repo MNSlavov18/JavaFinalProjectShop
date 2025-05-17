@@ -1,18 +1,17 @@
 package JavaClass.Data;
 
 import java.time.LocalDate;
-import java.util.EnumMap;
 import java.util.Objects;
 import java.util.UUID;
 
-public class Goods {
+public class Products {
     private UUID id;
     private String name;
     private Double deliveryPrice;
-    private GoodsType type;
+    private ProductType type;
     private LocalDate expiryDate;
 
-    public Goods(String name, Double deliveryPrice, GoodsType type, LocalDate expiryDate) {
+    public Products(String name, Double deliveryPrice, ProductType type, LocalDate expiryDate) {
         this.id = UUID.randomUUID();
         this.name = name;
         this.deliveryPrice = deliveryPrice;
@@ -44,11 +43,11 @@ public class Goods {
         this.deliveryPrice = deliveryPrice;
     }
 
-    public GoodsType getType() {
+    public ProductType getType() {
         return type;
     }
 
-    public void setType(GoodsType type) {
+    public void setType(ProductType type) {
         this.type = type;
     }
 
@@ -63,7 +62,7 @@ public class Goods {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        Goods goods = (Goods) o;
+        Products goods = (Products) o;
         return Objects.equals(id, goods.id);
     }
 

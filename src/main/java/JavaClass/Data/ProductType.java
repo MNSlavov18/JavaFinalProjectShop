@@ -1,5 +1,5 @@
 package JavaClass.Data;
 
-public enum GoodsType {
+public enum ProductType {
     FOOD, NON_FOOD
 }
