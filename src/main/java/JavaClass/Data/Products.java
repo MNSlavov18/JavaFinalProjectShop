@@ -1,30 +1,31 @@
 package JavaClass.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
 
 public class Products {
-    private UUID id;
+    private UUID product_id;
     private String name;
-    private Double deliveryPrice;
+    private BigDecimal deliveryPrice;
     private ProductType type;
     private LocalDate expiryDate;
 
-    public Products(String name, Double deliveryPrice, ProductType type, LocalDate expiryDate) {
-        this.id = UUID.randomUUID();
+    public Products(String name, BigDecimal deliveryPrice, ProductType type, LocalDate expiryDate) {
+        this.product_id = UUID.randomUUID();
         this.name = name;
         this.deliveryPrice = deliveryPrice;
         this.type = type;
         this.expiryDate = expiryDate;
     }
 
-    public UUID getId() {
-        return id;
+    public UUID getProduct_id() {
+        return product_id;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public void setProduct_id(UUID product_id) {
+        this.product_id = product_id;
     }
 
     public String getName() {
@@ -35,11 +36,11 @@ public class Products {
         this.name = name;
     }
 
-    public Double getDeliveryPrice() {
+    public BigDecimal getDeliveryPrice() {
         return deliveryPrice;
     }
 
-    public void setDeliveryPrice(Double deliveryPrice) {
+    public void setDeliveryPrice(BigDecimal deliveryPrice) {
         this.deliveryPrice = deliveryPrice;
     }
 
@@ -63,18 +64,18 @@ public class Products {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Products goods = (Products) o;
-        return Objects.equals(id, goods.id);
+        return Objects.equals(product_id, goods.product_id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(product_id);
     }
 
     @Override
     public String toString() {
-        return "Goods{" +
-                "id=" + id +
+        return "Products{" +
+                "id=" + product_id +
                 ", name='" + name + '\'' +
                 ", deliveryPrice=" + deliveryPrice +
                 ", type=" + type +

@@ -1,34 +1,35 @@
 package JavaClass.Data;
 
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
+import java.math.BigDecimal;
 import java.util.*;
 
 public class Shop {
-    private UUID  id;
+    private UUID shop_id;
     private String name;
     private Map<ProductType, Double> markupPercent;
     private Integer daysLeftUntilExpiryToGiveDiscount;
     private Map<ProductType, Double> discountPercent;
-    private Set<Products> products;
+    private Set<Cashier> cashiers;
+    private Map<Products, BigDecimal> product_Quantity;
     private Map<ProductType, Double> sellingPrice;
 
     public Shop(String name, Integer daysLeftUntilExpiryToGiveDiscount) {
-        this.id = UUID.randomUUID();
+        this.shop_id = UUID.randomUUID();
         this.name = name;
         this.markupPercent = new EnumMap<>(ProductType.class);
         this.daysLeftUntilExpiryToGiveDiscount = daysLeftUntilExpiryToGiveDiscount;
         this.discountPercent = new EnumMap<>(ProductType.class);
-        this.products = new HashSet<>();
+        this.cashiers = new HashSet<>();
+        this.product_Quantity = new HashMap<>();
         this.sellingPrice = new EnumMap<>(ProductType.class);
     }
 
-    public UUID getId() {
-        return id;
+    public UUID getShop_id() {
+        return shop_id;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public void setShop_id(UUID shop_id) {
+        this.shop_id = shop_id;
     }
 
     public String getName() {
@@ -55,12 +56,12 @@ public class Shop {
         return discountPercent;
     }
 
-    public Set<Products> getProducts() {
-        return products;
+    public Set<Cashier> getCashiers() {
+        return cashiers;
     }
 
-    public void setProducts(Set<Products> products) {
-        this.products = products;
+    public Map<Products, BigDecimal> getProduct_Quantity() {
+        return product_Quantity;
     }
 
     public Map<ProductType, Double> getSellingPrice() {
@@ -71,20 +72,20 @@ public class Shop {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Shop shop = (Shop) o;
-        return Objects.equals(id, shop.id);
+        return Objects.equals(shop_id, shop.shop_id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(shop_id);
     }
 
     @Override
     public String toString() {
         return "Shop{" +
-                "id=" + id +
+                "id=" + shop_id +
                 ", name='" + name + '\'' +
-                ", goods=" + products +
+                ", goods=" + product_Quantity +
                 '}';
     }
 }

@@ -1,24 +1,27 @@
 package JavaClass.Service;
 
+import JavaClass.Data.Cashier;
 import JavaClass.Data.ProductType;
 import JavaClass.Data.Products;
 import JavaClass.Data.Shop;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 public class ShopServiceImpl implements ShopService {
 
     @Override
-    public boolean addProduct(Shop shop, Products products) {
-        return shop.getProducts().add(products);
+    public void addProduct(Shop shop, Products products, BigDecimal quantity) {
+        shop.getProduct_Quantity().put(products, quantity);
     }
 
     @Override
     public void printProduct(Shop shop) {
-        shop.getProducts()
+        shop.getProduct_Quantity()
+                .entrySet()
                 .stream()
-                .forEach(System.out::println);
+                .forEach(e -> System.out.println(e.getKey() + ": " + e.getValue()));
     }
 
     @Override
@@ -47,27 +50,53 @@ public class ShopServiceImpl implements ShopService {
                 .forEach(System.out::println);
     }
 
+    private boolean isExpired(Products product, LocalDate today) {
+        return today.isAfter(product.getExpiryDate());
+    }
+
+    private BigDecimal calculateBasePriceWithMarkup(Shop shop, Products product) {
+        ProductType type = product.getType();
+        BigDecimal basePrice = product.getDeliveryPrice();
+        double markupPercent = shop.getMarkupPercent().getOrDefault(type, 0.0);
+        BigDecimal markupMultiplier = BigDecimal.valueOf(1.0 + markupPercent / 100.0);
+        return basePrice.multiply(markupMultiplier);
+    }
+
+    private BigDecimal applyDiscountIfNecessary(Shop shop, Products product, BigDecimal currentPrice, LocalDate today) {
+        long daysLeft = ChronoUnit.DAYS.between(today, product.getExpiryDate());
+        if (daysLeft <= shop.getDaysLeftUntilExpiryToGiveDiscount()) {
+            double discountPercent = shop.getDiscountPercent().getOrDefault(product.getType(), 0.0);
+            BigDecimal discountMultiplier = BigDecimal.valueOf(1.0 - discountPercent / 100.0);
+            return currentPrice.multiply(discountMultiplier);
+        }
+        return currentPrice;
+    }
+    
     @Override
     public Double printProductPricing(Shop shop, Products product, LocalDate today) {
-        if (today.isAfter(product.getExpiryDate())) {
+        if (isExpired(product, today)) {
             System.out.println(product.getName() + " → НЕ се продава (срок изтекъл)");
             return -1.0;
         }
 
-        ProductType type = product.getType();
-        double basePrice = product.getDeliveryPrice();
-
-        double markup = shop.getMarkupPercent().getOrDefault(type, 0.0);
-        double price = basePrice * (1.0 + markup / 100.0);
-
-        long daysLeft = ChronoUnit.DAYS.between(today, product.getExpiryDate());
-        if (daysLeft <= shop.getDaysLeftUntilExpiryToGiveDiscount()) {
-            double discount = shop.getDiscountPercent().getOrDefault(type, 0.0);
-            price *= (1.0 - discount / 100.0);
-        }
+        BigDecimal price = calculateBasePriceWithMarkup(shop, product);
+        price = applyDiscountIfNecessary(shop, product, price, today);
 
         System.out.printf("%s → %.2f лв.%n", product.getName(), price);
-        return price;
+        return price.doubleValue();
     }
-    
+
+    @Override
+    public boolean addCashier(Shop shop, Cashier cashier) {
+        return shop.getCashiers().add(cashier);
+    }
+
+    @Override
+    public void printCashier(Shop shop) {
+        shop.getCashiers()
+                .stream()
+                .forEach(System.out::println);
+    }
+
+
 }
