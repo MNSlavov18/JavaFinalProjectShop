@@ -11,5 +11,9 @@ import java.util.Map;
 public interface ReceiptService {
 
     public void printReceiptToFile(Receipt receipt, Shop shop, ShopService shopService, LocalDate today);
+    public int getTotalReceipts();
+    public Receipt deserializeReceipt(String receiptId);
+    public void printDeserializedReceipt(String receiptId);
+    public BigDecimal getTotalRevenue();
     public BigDecimal calculateTotalPrice(Shop shop, Map<Products, BigDecimal> productsSold, LocalDate today, ShopService shopService);
 }

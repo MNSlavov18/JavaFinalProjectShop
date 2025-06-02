@@ -1,9 +1,10 @@
 package JavaClass.Data;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.*;
 
-public class Shop {
+public class Shop  implements Serializable {
     private UUID shop_id;
     private String name;
     private Map<ProductType, Double> markupPercent;

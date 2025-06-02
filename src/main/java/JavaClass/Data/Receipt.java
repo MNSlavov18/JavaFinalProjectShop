@@ -1,5 +1,6 @@
 package JavaClass.Data;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -7,7 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-public class Receipt {
+public class Receipt implements Serializable {
     public UUID receiptId;
     public Cashier cashier;
     public LocalDate dateOfPurchase;

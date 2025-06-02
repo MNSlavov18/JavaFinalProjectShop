@@ -15,7 +15,6 @@ public class Main {
         ShopService shopService = new ShopServiceImpl();
         CashierService cashierService = new CashierServiceImpl();
         ReceiptService receiptService = new ReceiptServiceImpl();
-        
         Products eggs = new Products("Eggs", new BigDecimal(0.50) , ProductType.FOOD, LocalDate.of(2025,6,3));
         Products stol = new Products("Stol", new BigDecimal(50) , ProductType.NON_FOOD,null);
         
@@ -58,9 +57,20 @@ public class Main {
         
         cashierService.sellProduct(Lidl,cashier1,stol,new BigDecimal(2),new BigDecimal(200)
                 ,LocalDate.now(),shopService,receiptService);
+
+        System.out.println();
         
         cashierService.printCashierSalesReport(cashier1);
         cashierService.printCashierSalesReport(cashier2);
+
+        System.out.println();
         
+        System.out.println("Общ брой бележки: " + receiptService.getTotalReceipts());
+        System.out.println("Общ оборот: " + receiptService.getTotalRevenue());
+        
+        System.out.println();
+        String receiptId = "receipt_7b607d6a-9273-4726-8361-70d6b53103d9";
+        receiptService.deserializeReceipt(receiptId);
+        receiptService.printDeserializedReceipt(receiptId);
     }
 }

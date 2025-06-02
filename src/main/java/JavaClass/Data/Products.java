@@ -1,11 +1,12 @@
 package JavaClass.Data;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
 
-public class Products {
+public class Products implements Serializable {
     private UUID product_id;
     private String name;
     private BigDecimal deliveryPrice;

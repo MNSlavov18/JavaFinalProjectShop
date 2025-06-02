@@ -2,10 +2,11 @@ package JavaClass.Data;
 
 import JavaClass.Exceptions.DuplicateCashRegisterNumberException;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.*;
 
-public class Cashier {
+public class Cashier implements Serializable {
     private static final Set<Integer> usedRegisterNumbers = new HashSet<>();
     private Map<Products, BigDecimal> productsSold = new HashMap<>();
     
