@@ -4,10 +4,7 @@ import JavaClass.Data.Cashier;
 import JavaClass.Data.Products;
 import JavaClass.Data.ProductType;
 import JavaClass.Data.Shop;
-import JavaClass.Service.CashierService;
-import JavaClass.Service.CashierServiceImpl;
-import JavaClass.Service.ShopService;
-import JavaClass.Service.ShopServiceImpl;
+import JavaClass.Service.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -15,42 +12,52 @@ import java.time.LocalDate;
 public class Main {
     public static void main(String[] args) {
         Shop Lidl = new Shop("Lidl",  7);
-        ShopService service = new ShopServiceImpl();
+        ShopService shopService = new ShopServiceImpl();
         CashierService cashierService = new CashierServiceImpl();
+        ReceiptService receiptService = new ReceiptServiceImpl();
         
-        Products eggs = new Products("Eggs", new BigDecimal(0.50) , ProductType.FOOD, LocalDate.of(2025,5,18));
+        Products eggs = new Products("Eggs", new BigDecimal(0.50) , ProductType.FOOD, LocalDate.of(2025,6,3));
+        Products stol = new Products("Stol", new BigDecimal(50) , ProductType.NON_FOOD,null);
         
-        service.addProduct(Lidl, eggs , new BigDecimal(22));
-        service.printProduct(Lidl);
-        
-        System.out.println();
-        
-        service.addMarkupPercent(Lidl, ProductType.FOOD, 5.00);
-        service.addMarkupPercent(Lidl, ProductType.NON_FOOD, 7.00);
-        service.printMarkupPercent(Lidl);
+        shopService.addProduct(Lidl, eggs , new BigDecimal(22));
+        shopService.addProduct(Lidl, stol , new BigDecimal(2));
+        shopService.printProduct(Lidl);
         
         System.out.println();
         
-        service.addDiscountPercent(Lidl, ProductType.FOOD, 50.00);
-        service.addDiscountPercent(Lidl, ProductType.NON_FOOD, 7.00);
-        service.printDiscountPercent(Lidl);
+        shopService.addMarkupPercent(Lidl, ProductType.FOOD, 5.00);
+        shopService.addMarkupPercent(Lidl, ProductType.NON_FOOD, 7.00);
+        shopService.printMarkupPercent(Lidl);
         
         System.out.println();
         
-        service.printProductPricing(Lidl,eggs,LocalDate.of(2025,5,17));
+        shopService.addDiscountPercent(Lidl, ProductType.FOOD, 50.00);
+        shopService.addDiscountPercent(Lidl, ProductType.NON_FOOD, 7.00);
+        shopService.printDiscountPercent(Lidl);
+        
+        System.out.println();
+        
+        shopService.printProductPricing(Lidl,eggs,LocalDate.now());
+        shopService.printProductPricing(Lidl,stol,LocalDate.now());
+        shopService.getFinalProductPrice(Lidl,eggs,LocalDate.now());
+        shopService.getFinalProductPrice(Lidl,stol,LocalDate.now());
+        
         Cashier cashier1 = new Cashier("Mario", new BigDecimal(2000), 1);
-        cashierService.releaseRegisterNumber(cashier1);
-        Cashier cashier2 = new Cashier("Isma", new BigDecimal(2000), 1);
+        Cashier cashier2 = new Cashier("Isma", new BigDecimal(2000), 2);
         
         System.out.println();
         
-        service.addCashier(Lidl, cashier1);
-        service.addCashier(Lidl, cashier2);
-        service.printCashier(Lidl);
+        shopService.addCashier(Lidl, cashier1);
+        shopService.addCashier(Lidl, cashier2);
+        shopService.printCashier(Lidl);
         
         System.out.println();
         
-        cashierService.sellProduct(Lidl,cashier2,eggs,new BigDecimal(20));
+        cashierService.sellProduct(Lidl,cashier2,eggs,new BigDecimal(20),new BigDecimal(20)
+                ,LocalDate.now(),shopService,receiptService);
+        
+        cashierService.sellProduct(Lidl,cashier1,stol,new BigDecimal(2),new BigDecimal(200)
+                ,LocalDate.now(),shopService,receiptService);
         
         cashierService.printCashierSalesReport(cashier1);
         cashierService.printCashierSalesReport(cashier2);

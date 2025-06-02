@@ -15,7 +15,9 @@ public interface ShopService {
     void printMarkupPercent(Shop shop);
     void addDiscountPercent(Shop shop, ProductType product, double discountPercent);
     void printDiscountPercent(Shop shop);
+    public BigDecimal getFinalProductPrice(Shop shop, Products product, LocalDate today);
     Double printProductPricing(Shop shop, Products product, LocalDate today);
     boolean addCashier(Shop shop, Cashier cashier);
     void printCashier(Shop shop);
+    public boolean isExpired(Products product, LocalDate today);
 }

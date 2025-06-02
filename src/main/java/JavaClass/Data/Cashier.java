@@ -9,20 +9,20 @@ public class Cashier {
     private static final Set<Integer> usedRegisterNumbers = new HashSet<>();
     private Map<Products, BigDecimal> productsSold = new HashMap<>();
     
-    public UUID cashier_id;
+    public UUID cashierId;
     public String name;
     public BigDecimal salary;
-    public Integer cash_register_number;
+    public Integer cashRegisterNumber;
 
     public Cashier(String name, BigDecimal salary, Integer cash_register_number) {
         if(usedRegisterNumbers.contains(cash_register_number)){
             throw new DuplicateCashRegisterNumberException
                 ("Cash register number " + cash_register_number + " is already in use.");
         }
-        this.cashier_id = UUID.randomUUID();
+        this.cashierId = UUID.randomUUID();
         this.name = name;
         this.salary = salary;
-        this.cash_register_number = cash_register_number;
+        this.cashRegisterNumber = cash_register_number;
         usedRegisterNumbers.add(cash_register_number);
     }
 
@@ -42,23 +42,23 @@ public class Cashier {
         this.salary = salary;
     }
 
-    public Integer getCash_register_number() {
-        return cash_register_number;
+    public Integer getCashRegisterNumber() {
+        return cashRegisterNumber;
     }
 
-    public void setCash_register_number(Integer newNumber) {
-        if (Objects.equals(this.cash_register_number, newNumber)) {
+    public void setCashRegisterNumber(Integer newNumber) {
+        if (Objects.equals(this.cashRegisterNumber, newNumber)) {
             return; // Няма промяна
         }
 
         if (usedRegisterNumbers.contains(newNumber)) {
             throw new DuplicateCashRegisterNumberException("Cash register number " + newNumber + " is already in use.");
         }
-        if (this.cash_register_number != null) {
-            usedRegisterNumbers.remove(this.cash_register_number);
+        if (this.cashRegisterNumber != null) {
+            usedRegisterNumbers.remove(this.cashRegisterNumber);
         }
         
-        this.cash_register_number = newNumber;
+        this.cashRegisterNumber = newNumber;
         usedRegisterNumbers.add(newNumber);
     }
 
@@ -69,26 +69,26 @@ public class Cashier {
     public Map<Products, BigDecimal> getProductsSold() {
         return productsSold;
     }
-    
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Cashier cashier = (Cashier) o;
-        return Objects.equals(cashier_id, cashier.cashier_id);
+        return Objects.equals(cashierId, cashier.cashierId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(cashier_id);
+        return Objects.hashCode(cashierId);
     }
 
     @Override
     public String toString() {
         return "Cashier{" +
-                "cashier_id=" + cashier_id +
+                "cashier_id=" + cashierId +
                 ", name='" + name + '\'' +
                 ", salary=" + salary +
-                ", cash_register_number=" + cash_register_number +
+                ", cash_register_number=" + cashRegisterNumber +
                 '}';
     }
 }

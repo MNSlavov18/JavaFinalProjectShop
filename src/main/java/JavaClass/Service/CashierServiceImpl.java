@@ -1,22 +1,22 @@
 package JavaClass.Service;
 
-import JavaClass.Data.Cashier;
-import JavaClass.Data.ProductType;
-import JavaClass.Data.Products;
-import JavaClass.Data.Shop;
+import JavaClass.Data.*;
+import JavaClass.Exceptions.NotEnoughFundsException;
 import JavaClass.Exceptions.NotEnoughProductException;
+import JavaClass.Exceptions.PastTheExparationDataException;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
 public class CashierServiceImpl implements CashierService {
     public void releaseRegisterNumber(Cashier cashier) {
-        Integer currentNumber = cashier.getCash_register_number();
+        Integer currentNumber = cashier.getCashRegisterNumber();
 
         if (currentNumber != null && Cashier.getUsedRegisterNumbers().contains(currentNumber)) {
             Cashier.getUsedRegisterNumbers().remove(currentNumber);
-            cashier.setCash_register_number(null);
+            cashier.setCashRegisterNumber(null);
         }
     }
 
@@ -28,19 +28,38 @@ public class CashierServiceImpl implements CashierService {
     }
 
     @Override
-    public void sellProduct(Shop shop, Cashier cashier, Products product, BigDecimal quantityToSell) {
+    public void sellProduct(Shop shop, Cashier cashier, Products product, BigDecimal quantityToSell, BigDecimal cash,
+                            LocalDate today, ShopService shopService, ReceiptService receiptService) {
+
+        if (shopService.isExpired(product, today)) {
+            throw new PastTheExparationDataException("Не се продава: " + product.getName());
+        }
+
         Map<Products, BigDecimal> stock = shop.getProduct_Quantity();
         BigDecimal available = stock.getOrDefault(product, BigDecimal.ZERO);
 
         if (available.compareTo(quantityToSell) < 0) {
-            throw new NotEnoughProductException("Not enough stock for: " + product.getName() +
-                    ". Available: " + available + ", Requested: " + quantityToSell);
+            throw new NotEnoughProductException("Няма достатъчно стока: " + product.getName()
+                    + ". Останала: " + available + ", Нужна: " + quantityToSell);
         }
-        
+
+        Map<Products, BigDecimal> soldProducts = new HashMap<>();
+        soldProducts.put(product, quantityToSell);
+
+        BigDecimal totalPrice = receiptService.calculateTotalPrice(shop, soldProducts, today, shopService);
+
+        if (cash.compareTo(totalPrice) < 0) {
+            throw new NotEnoughFundsException("Недостатъчно пари. Нужни за успешна транзакция: "
+                    + totalPrice + ", Дадени: " + cash);
+        }
+
         stock.put(product, available.subtract(quantityToSell));
-        
         addProductSold(cashier, product, quantityToSell);
+
+        Receipt receipt = new Receipt(cashier, soldProducts, today, totalPrice);
+        receiptService.printReceiptToFile(receipt, shop, shopService, today);
     }
+    
     public void printCashierSalesReport(Cashier cashier) {
         Map<Products, BigDecimal> sold = cashier.getProductsSold();
 

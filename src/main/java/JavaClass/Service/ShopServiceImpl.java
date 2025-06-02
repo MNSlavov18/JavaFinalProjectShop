@@ -50,7 +50,22 @@ public class ShopServiceImpl implements ShopService {
                 .forEach(System.out::println);
     }
 
-    private boolean isExpired(Products product, LocalDate today) {
+    @Override
+    public BigDecimal getFinalProductPrice(Shop shop, Products product, LocalDate today) {
+        if (isExpired(product, today)) {
+            return BigDecimal.ZERO; // product cannot be sold
+        }
+
+        BigDecimal price = calculateBasePriceWithMarkup(shop, product);
+        return applyDiscountIfNecessary(shop, product, price, today);
+    }
+
+    @Override
+    public boolean isExpired(Products product, LocalDate today) {
+        LocalDate expiryDate = product.getExpiryDate();
+        if (expiryDate == null) {
+            return false; // No expiry date means not expired
+        }
         return today.isAfter(product.getExpiryDate());
     }
 
@@ -63,12 +78,18 @@ public class ShopServiceImpl implements ShopService {
     }
 
     private BigDecimal applyDiscountIfNecessary(Shop shop, Products product, BigDecimal currentPrice, LocalDate today) {
+
+        if (product.getExpiryDate() == null) {
+            return currentPrice; 
+        }
+        
         long daysLeft = ChronoUnit.DAYS.between(today, product.getExpiryDate());
         if (daysLeft <= shop.getDaysLeftUntilExpiryToGiveDiscount()) {
             double discountPercent = shop.getDiscountPercent().getOrDefault(product.getType(), 0.0);
             BigDecimal discountMultiplier = BigDecimal.valueOf(1.0 - discountPercent / 100.0);
             return currentPrice.multiply(discountMultiplier);
         }
+        
         return currentPrice;
     }
     
