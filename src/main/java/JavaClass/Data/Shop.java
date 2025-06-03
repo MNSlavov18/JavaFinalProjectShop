@@ -5,14 +5,15 @@ import java.math.BigDecimal;
 import java.util.*;
 
 public class Shop  implements Serializable {
-    private UUID shop_id;
-    private String name;
-    private Map<ProductType, Double> markupPercent;
-    private Integer daysLeftUntilExpiryToGiveDiscount;
-    private Map<ProductType, Double> discountPercent;
-    private Set<Cashier> cashiers;
-    private Map<Products, BigDecimal> product_Quantity;
-    private Map<ProductType, Double> sellingPrice;
+    public UUID shop_id;
+    public String name;
+    public Map<ProductType, Double> markupPercent;
+    public Integer daysLeftUntilExpiryToGiveDiscount;
+    public Map<ProductType, Double> discountPercent;
+    public Set<Cashier> cashiers;
+    public Map<Products, BigDecimal> product_Quantity;
+    public Map<Products, BigDecimal> deliveredProducts = new HashMap<>();
+    public Map<ProductType, Double> sellingPrice;
 
     public Shop(String name, Integer daysLeftUntilExpiryToGiveDiscount) {
         this.shop_id = UUID.randomUUID();
@@ -22,6 +23,7 @@ public class Shop  implements Serializable {
         this.discountPercent = new EnumMap<>(ProductType.class);
         this.cashiers = new HashSet<>();
         this.product_Quantity = new HashMap<>();
+        this.deliveredProducts = new HashMap<>();
         this.sellingPrice = new EnumMap<>(ProductType.class);
     }
 
@@ -65,6 +67,10 @@ public class Shop  implements Serializable {
         return product_Quantity;
     }
 
+    public Map<Products, BigDecimal> getDeliveredProducts() {
+        return deliveredProducts;
+    }
+
     public Map<ProductType, Double> getSellingPrice() {
         return sellingPrice;
     }
@@ -80,13 +86,27 @@ public class Shop  implements Serializable {
     public int hashCode() {
         return Objects.hashCode(shop_id);
     }
-
+    
     @Override
     public String toString() {
-        return "Shop{" +
-                "id=" + shop_id +
-                ", name='" + name + '\'' +
-                ", goods=" + product_Quantity +
-                '}';
+        StringBuilder sb = new StringBuilder();
+        sb.append("Магазин: ").append(name).append("\n");
+        sb.append("ID: ").append(shop_id).append("\n");
+        sb.append("Надценки: ").append(markupPercent).append("\n");
+        sb.append("Отстъпки: ").append(discountPercent).append("\n");
+        sb.append("Дни до отстъпка: ").append(daysLeftUntilExpiryToGiveDiscount).append("\n");
+        sb.append("Касиери: ").append(cashiers).append("\n");
+
+        sb.append("Продукти в наличност:\n");
+        product_Quantity.forEach((product, qty) -> {
+            sb.append(" - ").append(product.getName()).append(": ").append(qty).append("\n");
+        });
+
+        sb.append("Доставени продукти:\n");
+        deliveredProducts.forEach((product, qty) -> {
+            sb.append(" - ").append(product.getName()).append(": ").append(qty).append("\n");
+        });
+        
+        return sb.toString();
     }
 }

@@ -7,13 +7,15 @@ import JavaClass.Data.Shop;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Map;
 
 public interface CashierService {
     public void releaseRegisterNumber(Cashier cashier);
     public void addProductSold(Cashier cashier, Products product, BigDecimal quantity);
     public void sellProduct(Shop shop, Cashier cashier, Products product, BigDecimal quantityToSell, BigDecimal cash,
-                            LocalDate today, ShopService shopService, ReceiptService receiptService);
+                            LocalDate today, LocalTime time, ShopService shopService, ReceiptService receiptService);
     public void printCashierSalesReport(Cashier cashier);
+    public void addReceiptToCashier(Cashier cashier, Receipt receipt);
     
 }

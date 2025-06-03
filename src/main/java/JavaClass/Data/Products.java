@@ -7,11 +7,11 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class Products implements Serializable {
-    private UUID product_id;
-    private String name;
-    private BigDecimal deliveryPrice;
-    private ProductType type;
-    private LocalDate expiryDate;
+    public UUID product_id;
+    public String name;
+    public BigDecimal deliveryPrice;
+    public ProductType type;
+    public LocalDate expiryDate;
 
     public Products(String name, BigDecimal deliveryPrice, ProductType type, LocalDate expiryDate) {
         this.product_id = UUID.randomUUID();
@@ -75,12 +75,12 @@ public class Products implements Serializable {
 
     @Override
     public String toString() {
-        return "Products{" +
-                "id=" + product_id +
-                ", name='" + name + '\'' +
-                ", deliveryPrice=" + deliveryPrice +
-                ", type=" + type +
-                ", expiryDate=" + expiryDate +
-                '}';
+        return String.format(
+                "Продукт: %-10s | Доставка: %.2f лв. | Категория: %-10s | Годен до: %s",
+                name,
+                deliveryPrice,
+                type,
+                expiryDate != null ? expiryDate.toString() : "няма срок"
+        );
     }
 }

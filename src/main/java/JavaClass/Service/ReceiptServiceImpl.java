@@ -19,7 +19,7 @@ public class ReceiptServiceImpl implements ReceiptService {
 
             receiptContent.append("Касова бележка ID: ").append(receipt.getReceiptId()).append("\n");
             receiptContent.append("Касиер: ").append(receipt.getCashier().getName()).append("\n");
-            receiptContent.append("Дата на покупка: ").append(receipt.getDateOfPurchase()).append("\n");
+            receiptContent.append("Дата на покупка: ").append(receipt.getDateOfPurchase()).append(" ").append(receipt.getTimeOfPurchase()).append("\n");
             receiptContent.append("--------------------------------------------------\n");
 
             for (Map.Entry<Products, BigDecimal> entry : receipt.getProductsSold().entrySet()) {
@@ -46,7 +46,11 @@ public class ReceiptServiceImpl implements ReceiptService {
             } catch (IOException e) {
                 System.err.println("Грешка при запис на касовата бележка: " + e.getMessage());
             }
+            
+            updateStats(receipt.getTotalPrice());
+            
         serializeReceipt(receipt);
+            
     }
     
     private void updateStats(BigDecimal amount) {
@@ -81,7 +85,7 @@ public class ReceiptServiceImpl implements ReceiptService {
         if (receipt != null) {
             System.out.println("Блежката е заредена!");
             System.out.println("ID: " + receipt.getReceiptId());
-            System.out.println("Дата на копуване: " + receipt.getDateOfPurchase());
+            System.out.println("Дата на копуване: " + receipt.getDateOfPurchase() + " "+ receipt.getTimeOfPurchase());
             System.out.println("Цена: " + receipt.getTotalPrice());
             System.out.println("Ксиер: " + receipt.getCashier().getName());
 
@@ -95,11 +99,12 @@ public class ReceiptServiceImpl implements ReceiptService {
         }
     }
     
-    
+    @Override
     public int getTotalReceipts() {
         return totalReceipts;
     }
 
+    @Override
     public BigDecimal getTotalRevenue() {
         return totalRevenue;
     }

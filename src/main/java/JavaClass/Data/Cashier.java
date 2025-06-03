@@ -9,6 +9,7 @@ import java.util.*;
 public class Cashier implements Serializable {
     private static final Set<Integer> usedRegisterNumbers = new HashSet<>();
     private Map<Products, BigDecimal> productsSold = new HashMap<>();
+    private List<Receipt> receipts = new ArrayList<>();
     
     public UUID cashierId;
     public String name;
@@ -71,6 +72,10 @@ public class Cashier implements Serializable {
         return productsSold;
     }
 
+    public List<Receipt> getReceipts() {
+        return receipts;
+    }
+    
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

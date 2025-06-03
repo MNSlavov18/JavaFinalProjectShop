@@ -7,6 +7,7 @@ import JavaClass.Exceptions.PastTheExparationDataException;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,7 +30,7 @@ public class CashierServiceImpl implements CashierService {
 
     @Override
     public void sellProduct(Shop shop, Cashier cashier, Products product, BigDecimal quantityToSell, BigDecimal cash,
-                            LocalDate today, ShopService shopService, ReceiptService receiptService) {
+                            LocalDate today, LocalTime time, ShopService shopService, ReceiptService receiptService) {
 
         if (shopService.isExpired(product, today)) {
             throw new PastTheExparationDataException("Не се продава: " + product.getName());
@@ -56,10 +57,14 @@ public class CashierServiceImpl implements CashierService {
         stock.put(product, available.subtract(quantityToSell));
         addProductSold(cashier, product, quantityToSell);
 
-        Receipt receipt = new Receipt(cashier, soldProducts, today, totalPrice);
+        Receipt receipt = new Receipt(cashier, soldProducts, today, time ,totalPrice);
+        CashierService cashierService = new CashierServiceImpl();
+        
+        cashierService.addReceiptToCashier(cashier, receipt);
         receiptService.printReceiptToFile(receipt, shop, shopService, today);
     }
     
+    @Override
     public void printCashierSalesReport(Cashier cashier) {
         Map<Products, BigDecimal> sold = cashier.getProductsSold();
 
@@ -77,5 +82,10 @@ public class CashierServiceImpl implements CashierService {
 
             System.out.printf("- %s (%s): %.2f бр.%n", product.getName(), type, quantity);
         }
+    }
+    
+    @Override
+    public void addReceiptToCashier(Cashier cashier, Receipt receipt) {
+        cashier.getReceipts().add(receipt);
     }
 }
