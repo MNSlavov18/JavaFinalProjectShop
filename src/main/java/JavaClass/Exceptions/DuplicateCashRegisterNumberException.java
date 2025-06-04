@@ -1,7 +1,7 @@
 package JavaClass.Exceptions;
 
 public class DuplicateCashRegisterNumberException extends RuntimeException{
-    public DuplicateCashRegisterNumberException(String message) {
-        super(message);
+    public DuplicateCashRegisterNumberException(int cashRegisterNumber) {
+        super("Каса " + cashRegisterNumber + " вече има касиер!");
     }
 }

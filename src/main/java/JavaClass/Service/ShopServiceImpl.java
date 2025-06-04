@@ -82,7 +82,7 @@ public class ShopServiceImpl implements ShopService {
     public boolean isExpired(Products product, LocalDate today) {
         LocalDate expiryDate = product.getExpiryDate();
         if (expiryDate == null) {
-            return false; // No expiry date means not expired
+            return false; 
         }
         return today.isAfter(product.getExpiryDate());
     }

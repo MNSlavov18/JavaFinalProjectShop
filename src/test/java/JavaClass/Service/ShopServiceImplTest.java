@@ -23,7 +23,7 @@ class ShopServiceImplTest {
     @BeforeEach public void setUp() {
         shopService = new ShopServiceImpl();
         shop = new Shop("Lidl", 7);
-        product = new Products("Eggs", new BigDecimal(0.5), ProductType.FOOD, LocalDate.of(2025, 6, 3));
+        product = new Products("Eggs", new BigDecimal(0.5), ProductType.FOOD, LocalDate.of(2025, 6, 6));
         shopService.addProduct(shop, product, BigDecimal.TEN);
     }
 

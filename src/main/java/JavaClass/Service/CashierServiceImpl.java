@@ -33,15 +33,15 @@ public class CashierServiceImpl implements CashierService {
                             LocalDate today, LocalTime time, ShopService shopService, ReceiptService receiptService) {
 
         if (shopService.isExpired(product, today)) {
-            throw new PastTheExparationDataException("Не се продава: " + product.getName());
+            throw new PastTheExparationDataException(product);
         }
 
         Map<Products, BigDecimal> stock = shop.getProduct_Quantity();
         BigDecimal available = stock.getOrDefault(product, BigDecimal.ZERO);
 
         if (available.compareTo(quantityToSell) < 0) {
-            throw new NotEnoughProductException("Няма достатъчно стока: " + product.getName()
-                    + ". Останала: " + available + ", Нужна: " + quantityToSell);
+            throw new NotEnoughProductException(product, available, quantityToSell);
+                    
         }
 
         Map<Products, BigDecimal> soldProducts = new HashMap<>();
@@ -50,8 +50,7 @@ public class CashierServiceImpl implements CashierService {
         BigDecimal totalPrice = receiptService.calculateTotalPrice(shop, soldProducts, today, shopService);
 
         if (cash.compareTo(totalPrice) < 0) {
-            throw new NotEnoughFundsException("Недостатъчно пари. Нужни за успешна транзакция: "
-                    + totalPrice + ", Дадени: " + cash);
+            throw new NotEnoughFundsException(totalPrice, cash);
         }
 
         stock.put(product, available.subtract(quantityToSell));

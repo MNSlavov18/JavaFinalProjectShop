@@ -1,5 +1,9 @@
 package JavaClass.Exceptions;
 
+import JavaClass.Data.Products;
+
 public class PastTheExparationDataException extends RuntimeException {
-    public PastTheExparationDataException(String message) {super(message);}
+    public PastTheExparationDataException(Products product) {
+        super("Не се продава: " + product.getName() + ". Причина: Изтекъл срок");
+    }
 }

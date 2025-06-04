@@ -20,7 +20,7 @@ public class Main {
         Shop Lidl = new Shop("Lidl",  7);
         
         Products eggs = new Products("Яйца", new BigDecimal(0.50) 
-                , ProductType.FOOD, LocalDate.of(2025,6,3));
+                , ProductType.FOOD, LocalDate.of(2025,6,9));
         Products stol = new Products("Стол", new BigDecimal(50) 
                 , ProductType.NON_FOOD,null);
         

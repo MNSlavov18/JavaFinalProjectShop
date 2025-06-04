@@ -9,7 +9,7 @@ import java.util.*;
 public class Cashier implements Serializable {
     private static final Set<Integer> usedRegisterNumbers = new HashSet<>();
     private Map<Products, BigDecimal> productsSold = new HashMap<>();
-    private List<Receipt> receipts = new ArrayList<>();
+    private List<Receipt> receipts = new ArrayList<>(); // трябва да е в конструктура
     
     public UUID cashierId;
     public String name;
@@ -18,8 +18,7 @@ public class Cashier implements Serializable {
 
     public Cashier(String name, BigDecimal salary, Integer cash_register_number) {
         if(usedRegisterNumbers.contains(cash_register_number)){
-            throw new DuplicateCashRegisterNumberException
-                ("Cash register number " + cash_register_number + " is already in use.");
+            throw new DuplicateCashRegisterNumberException(cash_register_number);
         }
         this.cashierId = UUID.randomUUID();
         this.name = name;
@@ -54,7 +53,7 @@ public class Cashier implements Serializable {
         }
 
         if (usedRegisterNumbers.contains(newNumber)) {
-            throw new DuplicateCashRegisterNumberException("Cash register number " + newNumber + " is already in use.");
+            throw new DuplicateCashRegisterNumberException(newNumber);
         }
         if (this.cashRegisterNumber != null) {
             usedRegisterNumbers.remove(this.cashRegisterNumber);

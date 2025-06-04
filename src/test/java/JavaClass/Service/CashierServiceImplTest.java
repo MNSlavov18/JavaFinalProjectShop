@@ -46,7 +46,7 @@ class CashierServiceImplTest {
 
         Shop shop = new Shop("Lidl",7);
         Cashier cashier1 = new Cashier("Mario", new BigDecimal(2000), 1);
-        Products eggs = new Products("Eggs", new BigDecimal(0.50) , ProductType.FOOD, LocalDate.of(2025,6,3));
+        Products eggs = new Products("Eggs", new BigDecimal(0.50) , ProductType.FOOD, LocalDate.of(2025,6,10));
         shop.getCashiers().add(cashier1);
         shopService.addProduct(shop, eggs, BigDecimal.TEN);
 
@@ -66,7 +66,7 @@ class CashierServiceImplTest {
 
         Shop shop = new Shop("Lidl", 7);
         Cashier cashier1 = new Cashier("Mario", new BigDecimal(2000), 1);
-        Products eggs = new Products("Eggs", new BigDecimal(0.5), ProductType.FOOD, LocalDate.of(2025, 6, 3));
+        Products eggs = new Products("Eggs", new BigDecimal(0.5), ProductType.FOOD, LocalDate.of(2025, 6, 10));
         shop.getCashiers().add(cashier1);
         shopService.addProduct(shop, eggs, new BigDecimal(1)); // само 1 брой
 
@@ -91,7 +91,7 @@ class CashierServiceImplTest {
 
         Shop shop = new Shop("Lidl", 7);
         Cashier cashier1 = new Cashier("Mario", new BigDecimal(2000), 1);
-        Products eggs = new Products("Eggs", new BigDecimal(0.5), ProductType.FOOD, LocalDate.of(2025, 6, 3));
+        Products eggs = new Products("Eggs", new BigDecimal(0.5), ProductType.FOOD, LocalDate.of(2025, 6, 10));
         shop.getCashiers().add(cashier1);
         shopService.addProduct(shop, eggs, new BigDecimal(10));
 
@@ -109,6 +109,26 @@ class CashierServiceImplTest {
     }
 
     @Test
+    public void testSellProduct_WithSufficientFunds_ShouldNotThrowException() {
+        CashierServiceImpl cashierService = new CashierServiceImpl();
+        ShopServiceImpl shopService = new ShopServiceImpl();
+        ReceiptServiceImpl receiptService = new ReceiptServiceImpl();
+
+        Shop shop = new Shop("Lidl",7);
+        Cashier cashier1 = new Cashier("Mario", new BigDecimal(2000), 1);
+        Products eggs = new Products("Eggs", new BigDecimal(0.50) , ProductType.FOOD, LocalDate.of(2025,6,10));
+        shop.getCashiers().add(cashier1);
+        shopService.addProduct(shop, eggs, BigDecimal.TEN);
+
+        BigDecimal initialStock = shop.getProduct_Quantity().get(eggs);
+
+        cashierService.sellProduct(shop, cashier1, eggs, BigDecimal.ONE, BigDecimal.valueOf(20), LocalDate.now(),LocalTime.now(), shopService, receiptService);
+
+        BigDecimal finalStock = shop.getProduct_Quantity().get(eggs);
+        assertEquals(initialStock.subtract(BigDecimal.ONE), finalStock);
+    }
+    
+    @Test
     public void testPrintCashierSalesReport_ShouldNotThrowExceptions() {
         CashierServiceImpl cashierService = new CashierServiceImpl();
         ShopServiceImpl shopService = new ShopServiceImpl();
@@ -116,7 +136,7 @@ class CashierServiceImplTest {
 
         Shop shop = new Shop("Lidl", 7);
         Cashier cashier1 = new Cashier("Mario", new BigDecimal(2000), 1);
-        Products eggs = new Products("Eggs", new BigDecimal(0.5), ProductType.FOOD, LocalDate.of(2025, 6, 3));
+        Products eggs = new Products("Eggs", new BigDecimal(0.5), ProductType.FOOD, LocalDate.of(2025, 6, 10));
 
         shop.getCashiers().add(cashier1);
         shopService.addProduct(shop, eggs, BigDecimal.TEN);
